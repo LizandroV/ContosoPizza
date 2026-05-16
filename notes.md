@@ -1,10 +1,10 @@
-# CSE 325 — Week 01 Assignment Notes
+# CSE 325 — Week 01 — Notes de entrega
 
 ---
 
-## Part 1: Web API with ASP.NET Core Controllers
+## Parte 1: Web API con ASP.NET Core Controllers
 
-### Pizza list — showing all records including additional entry
+### Lista de pizzas (incluyendo el registro adicional)
 
 ```
 GET http://localhost:5100/pizza
@@ -13,63 +13,59 @@ GET http://localhost:5100/pizza
 [
   { "id": 1, "name": "Classic Italian",  "isGlutenFree": false },
   { "id": 2, "name": "Veggie",           "isGlutenFree": true  },
-  { "id": 3, "name": "Pepperoni Blast",  "isGlutenFree": false }   ← added record
+  { "id": 3, "name": "Pepperoni Blast",  "isGlutenFree": false }  ← registro adicional
 ]
 ```
 
-### CRUD Operations — Request & Response Evidence
+### Verificacion de operaciones CRUD
 
-#### GET all pizzas
+| Operacion | Request                              | Status Code     |
+|-----------|--------------------------------------|-----------------|
+| GET all   | GET /pizza                           | 200 OK          |
+| GET one   | GET /pizza/3                         | 200 OK          |
+| GET miss  | GET /pizza/99                        | 404 Not Found   |
+| POST      | POST /pizza  body: BBQ Chicken       | 201 Created     |
+| PUT       | PUT /pizza/4  body: BBQ Chicken Deluxe | 204 No Content |
+| DELETE    | DELETE /pizza/4                      | 204 No Content  |
 
-```
-Request:  GET http://localhost:5100/pizza
-Response: 200 OK
-Body:     [ array of all 3 pizzas ]
-```
+### Evidencia GET all (con registro adicional visible)
 
-#### GET single pizza
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
 
-```
-Request:  GET http://localhost:5100/pizza/3
-Response: 200 OK
-Body:     { "id": 3, "name": "Pepperoni Blast", "isGlutenFree": false }
-```
-
-#### GET non-existent pizza
-
-```
-Request:  GET http://localhost:5100/pizza/99
-Response: 404 Not Found
-```
-
-#### POST — create new pizza
-
-```
-Request:  POST http://localhost:5100/pizza
-Body:     { "name": "BBQ Chicken", "isGlutenFree": false }
-Response: 201 Created
-Body:     { "id": 4, "name": "BBQ Chicken", "isGlutenFree": false }
-Header:   Location: http://localhost:5100/Pizza/4
+[
+  { "id": 1, "name": "Classic Italian",  "isGlutenFree": false },
+  { "id": 2, "name": "Veggie",           "isGlutenFree": true  },
+  { "id": 3, "name": "Pepperoni Blast",  "isGlutenFree": false }
+]
 ```
 
-#### PUT — update existing pizza
+### Evidencia POST
+
+```json
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Location: http://localhost:5100/Pizza/4
+
+{ "id": 4, "name": "BBQ Chicken", "isGlutenFree": false }
+```
+
+### Evidencia PUT
 
 ```
-Request:  PUT http://localhost:5100/pizza/4
-Body:     { "id": 4, "name": "BBQ Chicken Deluxe", "isGlutenFree": true }
-Response: 204 No Content
+HTTP/1.1 204 No Content
 ```
 
-#### DELETE — remove pizza
+### Evidencia DELETE
 
 ```
-Request:  DELETE http://localhost:5100/pizza/4
-Response: 204 No Content
+HTTP/1.1 204 No Content
 ```
 
 ---
 
-## Part 2: Sales Summary Function (Work with Files & Directories)
+## Parte 2: Funcion GenerateSalesSummary
 
 ```csharp
 void GenerateSalesSummary(string[] files, string baseDirectory, string outputPath)
@@ -77,7 +73,6 @@ void GenerateSalesSummary(string[] files, string baseDirectory, string outputPat
     double grandTotal = 0;
     var details = new List<(string RelativePath, double Total)>();
 
-    // Read each file and accumulate totals
     foreach (var filePath in files)
     {
         var json      = File.ReadAllText(filePath);
@@ -86,12 +81,10 @@ void GenerateSalesSummary(string[] files, string baseDirectory, string outputPat
 
         grandTotal += fileTotal;
 
-        // Use relative path so the report shows "201/sales.json" not the full disk path
         var relativePath = Path.GetRelativePath(baseDirectory, filePath);
         details.Add((relativePath, fileTotal));
     }
 
-    // Build the report with StringBuilder
     var report = new StringBuilder();
     report.AppendLine("Sales Summary");
     report.AppendLine("----------------------------");
@@ -104,18 +97,16 @@ void GenerateSalesSummary(string[] files, string baseDirectory, string outputPat
         report.AppendLine($"  {relativePath}: {total.ToString("C")}");
     }
 
-    // Write to file (overwrites if already exists)
     File.WriteAllText(outputPath, report.ToString());
 
-    Console.WriteLine();
-    Console.WriteLine("══════════════════════════════════════");
+    Console.WriteLine("\n══════════════════════════════════════");
     Console.Write(report.ToString());
     Console.WriteLine("══════════════════════════════════════");
-    Console.WriteLine($"Summary saved to: {outputPath}");
+    Console.WriteLine($"summary.txt guardado en: {outputPath}");
 }
 ```
 
-### Example output (summary.txt)
+### Salida esperada en summary.txt
 
 ```
 Sales Summary

@@ -1,0 +1,171 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "ContosoPizza API",
+  "dateExported": "2026-01-01",
+  "version": "1.1",
+  "folders": [
+    {
+      "_id": "folder-pizza",
+      "name": "Pizza Endpoints",
+      "containerId": "",
+      "created": "2026-01-01T00:00:00.000Z"
+    }
+  ],
+  "requests": [
+    {
+      "_id": "req-get-all",
+      "colId": "col-contoso",
+      "containerId": "folder-pizza",
+      "name": "GET all pizzas",
+      "url": "http://localhost:5100/pizza",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "none",
+        "raw": ""
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "req-get-one",
+      "colId": "col-contoso",
+      "containerId": "folder-pizza",
+      "name": "GET pizza by id (id=3)",
+      "url": "http://localhost:5100/pizza/3",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "none",
+        "raw": ""
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "req-get-404",
+      "colId": "col-contoso",
+      "containerId": "folder-pizza",
+      "name": "GET pizza not found (id=99)",
+      "url": "http://localhost:5100/pizza/99",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "none",
+        "raw": ""
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        }
+      ]
+    },
+    {
+      "_id": "req-post",
+      "colId": "col-contoso",
+      "containerId": "folder-pizza",
+      "name": "POST create pizza",
+      "url": "http://localhost:5100/pizza",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"BBQ Chicken\",\n  \"isGlutenFree\": false\n}"
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        }
+      ]
+    },
+    {
+      "_id": "req-put",
+      "colId": "col-contoso",
+      "containerId": "folder-pizza",
+      "name": "PUT update pizza (id=4)",
+      "url": "http://localhost:5100/pizza/4",
+      "method": "PUT",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"id\": 4,\n  \"name\": \"BBQ Chicken Deluxe\",\n  \"isGlutenFree\": true\n}"
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    },
+    {
+      "_id": "req-delete",
+      "colId": "col-contoso",
+      "containerId": "folder-pizza",
+      "name": "DELETE pizza (id=4)",
+      "url": "http://localhost:5100/pizza/4",
+      "method": "DELETE",
+      "headers": [],
+      "body": {
+        "type": "none",
+        "raw": ""
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    }
+  ]
+}

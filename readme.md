@@ -1,122 +1,108 @@
 # CSE 325 — Week 01: Build .NET Applications with C#
 
-## Repository Structure
+## Estructura del repositorio
 
 ```
-cse325-week01/
-├── ContosoPizza/          ← Part 1: Web API (ASP.NET Core)
+week01/
+├── ContosoPizza/                  ← Parte 1: Web API
 │   ├── Controllers/
-│   │   └── PizzaController.cs
+│   │   └── PizzaController.cs    ← Endpoints GET/POST/PUT/DELETE
 │   ├── Models/
-│   │   └── Pizza.cs
+│   │   └── Pizza.cs              ← Forma de los datos
 │   ├── Services/
-│   │   └── PizzaService.cs
+│   │   └── PizzaService.cs       ← Lista en memoria + logica CRUD
 │   ├── Properties/
-│   │   └── launchSettings.json
+│   │   └── launchSettings.json   ← Puerto fijo: 5100
 │   ├── appsettings.json
 │   ├── appsettings.Development.json
 │   ├── ContosoPizza.csproj
-│   ├── Program.cs
-│   └── thunder-collection_ContosoPizza.json  ← Thunder Client test collection
+│   └── Program.cs                ← Arranca la app web
 │
-├── TailwindTraders/       ← Part 2: Files & Directories
+├── TailwindTraders/               ← Parte 2: Archivos
 │   ├── stores/
 │   │   ├── 201/sales.json
 │   │   ├── 202/sales.json
 │   │   └── 203/sales.json
-│   ├── salesTotalDir/     ← generated on first run
 │   ├── TailwindTraders.csproj
-│   └── Program.cs
+│   └── Program.cs                ← Lee archivos + GenerateSalesSummary
 │
-├── notes.md               ← Assignment submission evidence
+├── notes.md                       ← Evidencia para la entrega
 └── README.md
 ```
 
 ---
 
-## Part 1 — ContosoPizza Web API
-
-### Prerequisites
-
-- .NET 8 SDK → `dotnet --version` should show `8.x.x`
-- Visual Studio Code
-- [Thunder Client extension](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client)
-
-### Run the API
+## Parte 1 — Correr la Web API
 
 ```bash
 cd ContosoPizza
 dotnet run
 ```
 
-The API starts at **http://localhost:5100**
-
-### Test with Thunder Client
-
-1. Open VS Code
-2. Click the **Thunder Client** icon in the left sidebar (lightning bolt)
-3. Click **Collections → Import**
-4. Select the file `ContosoPizza/thunder-collection_ContosoPizza.json`
-5. The collection **"ContosoPizza API"** will appear with 6 pre-built requests
-
-#### Correct testing order:
-
-| #   | Request Name            | Method | URL       | Expected Status    |
-| --- | ----------------------- | ------ | --------- | ------------------ |
-| 1   | GET all pizzas          | GET    | /pizza    | **200 OK**         |
-| 2   | GET pizza by id (id=3)  | GET    | /pizza/3  | **200 OK**         |
-| 3   | GET pizza not found     | GET    | /pizza/99 | **404 Not Found**  |
-| 4   | POST create pizza       | POST   | /pizza    | **201 Created**    |
-| 5   | PUT update pizza (id=4) | PUT    | /pizza/4  | **204 No Content** |
-| 6   | DELETE pizza (id=4)     | DELETE | /pizza/4  | **204 No Content** |
-
-> ⚠️ Run requests in this order: GET → POST → PUT → DELETE
-> After POST creates pizza with id=4, then run PUT and DELETE on id=4.
-
-### Endpoints Summary
-
-| Verb   | URL         | Body required                                     | Success code   |
-| ------ | ----------- | ------------------------------------------------- | -------------- |
-| GET    | /pizza      | —                                                 | 200 OK         |
-| GET    | /pizza/{id} | —                                                 | 200 OK         |
-| POST   | /pizza      | `{"name":"...","isGlutenFree":true/false}`        | 201 Created    |
-| PUT    | /pizza/{id} | `{"id":N,"name":"...","isGlutenFree":true/false}` | 204 No Content |
-| DELETE | /pizza/{id} | —                                                 | 204 No Content |
+La API queda escuchando en **http://localhost:5100**
 
 ---
 
-## Part 2 — TailwindTraders (Files & Directories)
+## Parte 1 — Probar con Postman (6 requests en orden)
 
-### Run the project
+### 1. GET all — ver todas las pizzas
+- Method: **GET**
+- URL: `http://localhost:5100/pizza`
+- Body: ninguno
+- Resultado esperado: **200 OK** con array de 3 pizzas
+
+### 2. GET one — buscar por id
+- Method: **GET**
+- URL: `http://localhost:5100/pizza/3`
+- Body: ninguno
+- Resultado esperado: **200 OK** con "Pepperoni Blast"
+
+### 3. GET not found — id que no existe
+- Method: **GET**
+- URL: `http://localhost:5100/pizza/99`
+- Body: ninguno
+- Resultado esperado: **404 Not Found**
+
+### 4. POST — crear nueva pizza
+- Method: **POST**
+- URL: `http://localhost:5100/pizza`
+- Body → raw → JSON:
+```json
+{
+  "name": "BBQ Chicken",
+  "isGlutenFree": false
+}
+```
+- Resultado esperado: **201 Created** con id=4
+
+### 5. PUT — actualizar pizza id=4
+- Method: **PUT**
+- URL: `http://localhost:5100/pizza/4`
+- Body → raw → JSON:
+```json
+{
+  "id": 4,
+  "name": "BBQ Chicken Deluxe",
+  "isGlutenFree": true
+}
+```
+- Resultado esperado: **204 No Content**
+
+### 6. DELETE — eliminar pizza id=4
+- Method: **DELETE**
+- URL: `http://localhost:5100/pizza/4`
+- Body: ninguno
+- Resultado esperado: **204 No Content**
+
+---
+
+## Parte 2 — Correr TailwindTraders
 
 ```bash
 cd TailwindTraders
 dotnet run
 ```
 
-This will:
-
-1. Find all `sales.json` files under `stores/`
-2. Write a `salesTotalDir/totals.txt` with raw numbers (module exercise)
-3. Write a `salesTotalDir/summary.txt` with the formatted sales summary report (assignment task)
-4. Print the summary to the console
-
-### Expected console output
-
-```
-Found 3 sales file(s).
-Totals written to: .../salesTotalDir/totals.txt
-
-══════════════════════════════════════
-Sales Summary
-----------------------------
- Total Sales: $106,406.25
-
- Details:
-  201/sales.json: $22,385.32
-  202/sales.json: $45,120.75
-  203/sales.json: $38,900.18
-
-══════════════════════════════════════
-Summary saved to: .../salesTotalDir/summary.txt
-```
+Genera dos archivos en `salesTotalDir/`:
+- `totals.txt` → numeros crudos (del modulo)
+- `summary.txt` → reporte formateado (tarea del assignment)
